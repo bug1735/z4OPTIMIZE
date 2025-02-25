@@ -15,6 +15,7 @@
 #include "mpu6050.h"
 #include "usart.h"
 #include "W25Q64.h"
+#include "queue.h"
 
 extern void SystemInit(void){
 	/* Set HSION bit */
@@ -42,15 +43,23 @@ uint8_t state = 0;
 char USART_RECEIVE[12];
 //system time
 uint32_t SysTime;
-int32_t ClockTime; //计时时间，一年有 365天的总秒数为31536000，所以计算机的计时周期是 2147483647/31536000=68.1年
+int32_t ClockTime = 2592006; //计时时间，一年有 365天的总秒数为31536000，所以计算机的计时周期是 2147483647/31536000=68.1年
 uint32_t SysTime2;
+int32_t Clock2 = -86401; // 用于秒速过一天，更新date数据
+int16_t DateYear = 2024;
+int8_t DateDay = 1;
+int8_t DateMonth = 1;
+int8_t DateWeek = 1;
+int8_t Weather = 0; //天气数据
 void SysTick_Handler(void){
 	SysTime++;
 	SysTime2++;
+	Clock2 = ClockTime;
 	if(SysTime2 == 12){
 		ClockTime ++;
 		SysTime2 = 0;
 	}
+	if(ClockTime - Clock2 > 86400) DateCalculate();
 }
 
 int main(void)
@@ -60,17 +69,25 @@ int main(void)
 	SpiInit();
 	SysTickInit(0);
 	KeyBoradInit2();
-	//MPU6050_DMP_Init();
 	MPUInit();
-	//MPUInitDebug();
 	status = 0;
 	state = 0;
-	//GPIOA0_Init();
-	//OledShowChar(2,1,'A');
-	//OledShowNUM(NUM1,3);
 	JdyInit();
+	DateCalculate();
+	
+	BUFFERINIT();
+	
+	uint32_t phyaddr = 0x800000;
+	uint32_t viraddr = W_ADDR_RET(phyaddr);
+	OledShowHexNum(2,1,phyaddr,10);
+	OledShowHexNum(3,1,viraddr,10);
+	char * data = "name is myworte is ok";
+	W25Q64SectorErase(phyaddr);
+	MyWrite(viraddr,(uint8_t*)data,21);
+	uint8_t * data2 = MyRead(viraddr,21);
+	OledShowString(1,1,(char*)data2);
 	while(1){	
-		AppShow();
+		//AppShow();
 	};
 	
 }

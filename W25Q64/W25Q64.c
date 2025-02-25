@@ -145,3 +145,16 @@ void W25Q64ReadData(uint32_t Address, uint8_t *DataArray, uint32_t Count)
 	}
 	SpiChose(1);    
 };
+
+
+void MyWrite(uint32_t viraddr,uint8_t * buf, uint16_t count){
+	uint32_t addr = W_ADDR_CUL(viraddr);
+	W25Q64PageProgram(addr,buf,count);
+}
+#include <stdlib.h>
+uint8_t* MyRead(uint32_t viraddr,uint32_t count){
+	uint32_t addr = W_ADDR_CUL(viraddr);
+	uint8_t * data = (uint8_t *)malloc(8*count);
+	W25Q64ReadData(addr,data,count);
+	return data;
+}

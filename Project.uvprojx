@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Start;.\Library;.\User;.\System;.\mylib;.\MPU;.\USART;.\W25Q64</IncludePath>
+              <IncludePath>.\Start;.\Library;.\User;.\System;.\mylib;.\MPU;.\USART;.\W25Q64;.\DMA</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -684,6 +684,21 @@
               <FileName>W25Q64_Ins.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\W25Q64\W25Q64_Ins.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>DMA</GroupName>
+          <Files>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\DMA\dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>dma.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\DMA\dma.h</FilePath>
             </File>
           </Files>
         </Group>

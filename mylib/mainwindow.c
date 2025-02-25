@@ -19,9 +19,56 @@
 
 char appstr[5][16] = {"timer","counttimer","stepnum","music","sorage"};
 
+#include "W25Q64.h"
+#include "queue.h"
+extern struct QueueStack  *JdyStack;//defined in uart.c
+//*******************************************
+//处理buffer用的api  
+//TODO在串口接收到一个结束信号后就可以开启此中断
+#define STARTSIGN (uint8_t)0xFF
+#define ENDSIGN (uint8_t)0xFF
+void dateDeal(void); //处理日期数据
+void weatherDeal(void);//处理天气信息
+void musicDeal(void); //处理音乐相关的信息 
+void Buffer(void){
+	uint8_t data;
+	//数据段开始  使用链表实现的buffer
+	/*if(QueuePop(JdyStack) == STARTSIGN){
+		//数据段结束
+		data = QueuePop(JdyStack);
+		if(data == 'd'){
+			//处理日期数据
+			dateDeal();
+		}else if(data == 't'){
+			//处理天气情况
+			weatherDeal();
+		}else if(data == 'm'){
+			//是音乐信息
+		}else{
+			//未定义的信息
+		}	
+	}
+	*/
+	
+	//使用数组实现的链表
+	while(ReadBufOne() == STARTSIGN);
+	data = ReadBufOne();
+	if(data == 'd'){
+		//处理日期数据
+		dateDeal();
+	}else if(data == 't'){
+		//处理天气情况
+		weatherDeal();
+	}else if(data == 'm'){
+		//是音乐信息
+	}else{
+		//未定义的信息
+	}
+}
+//*******************************************
 
 /*
-	桌面程序，用于选择当前执行的权限，在应用程序中，
+	桌面程序，用于选择当前执行的权限，在应用程序中�?
 	返回和退出的过程没有操作系统，所以在设定程序的时候有程序返回
 */
 void AppShow(void)
@@ -56,25 +103,24 @@ void AppShow(void)
 	
 };
 
-
-char date[] = "2024-11-7";
-char day[] = "THE";
-char weather[] = "cloud";
 	
 void ClockShow(void)
 {
 	OledClear();
-	uint8_t num = 0;
-	uint32_t time = 0;
+	uint8_t num = 0; //用于时钟冒号的闪烁延�?
+	uint8_t time = 0;
 	while(status == CLOCKRUN){	
-		OledShowString(1,1,date);
-		OledShowString(1,12,day);
-		OledShowString(4,12,weather);
-		OledShowCOLON(num);
+		OledShowNum(1,1,DateYear,4);
+		OledShowChar(1,5,'-');
+		OledShowNum(1,6,DateMonth,2);
+		OledShowChar(1,8,'-');
+		OledShowNum(1,9,DateDay,2);
+		OledShowNum(1,12,Weather,1);
+		OledShowCOLON(num);		
 		OledShowNUM(NUM4,ClockTime%10);	
 		OledShowNUM(NUM3,ClockTime%60/10);
 		OledShowNUM(NUM2,ClockTime/60%10);
-		OledShowNUM(NUM1,ClockTime/60/10);
+		OledShowNUM(NUM1,ClockTime%3600/60/10);
 		if(StateRead(LEFT) ==  0x01 || StateRead(RIGHT) == 0x01){
 			status = 1;
 			state = 0;
@@ -173,7 +219,7 @@ void Timer(void){
 void CountdownTimer(void){
 	OledClear();
 	uint32_t localtimer = 0;
-	uint8_t appstate = 0; /* 0 主页面，时间选择界面 , 1 时间设置 , 2 开始计时 3 时间暂停*/
+	uint8_t appstate = 0; /* 0 主页面，时间选择界面 , 1 时间设置 , 2 开始计�? 3 时间暂停*/
 	uint8_t timerset = 0;  
 	
 	while(status == COUNTRUN){
@@ -378,6 +424,8 @@ void Mp3Switch(void){
 	//				}
 	//			}
 	//		}
+	
+	//设置分割符，0xff为分割符
 	uint8_t data;
 	uint8_t lock = 0;
 	int8_t j = 0;
@@ -389,91 +437,88 @@ void Mp3Switch(void){
 			
 			if(USART_GetFlagStatus(USART1,USART_FLAG_RXNE) == RESET)
 			{
-				if(JdyStack->size != 0){
-					data = QueuePop(JdyStack);
-					if(lock == 0){
-						switch(data){
-							case 'd':
-								lock = 'd';
-								break;
-							case 't':
-								lock = 't';
-								break;
-							case 'w':
-								lock = 'w';
-								break;
-							default:
-								break;
-						}
-					}
-					if(lock == 'd'){
-						for(j = 0;JdyStack->size != 0 ;j++){
-							day[j]  = QueuePop(JdyStack);
-						}
-					}else if(lock == 'w'){
-						for(j = 0;JdyStack->size != 0 ;j++){
-							weather[j]  = QueuePop(JdyStack);
-						}
-					}else if(lock == 't'){
-						for(j = 0;JdyStack->size != 0 ;j++){
-							date[j]  = QueuePop(JdyStack);
-						}
-					}
-				}else{
-					lock = 0; 
-					data = 0;
+				if(QueuePop(JdyStack) == 0xFF){
+				
 				}
-				//for(int8_t i = 1;i < 5;i++){
-				//	for(int8_t j = 1; j < 15;j++){
-				//		if(JdyStack->size != 0){
-				//			data = QueuePop(JdyStack);
-				//			if(data == 'd' || data == 't' || data == 'w'){
-				//				lock = 1;
-				//			}
-				//			if(lock == 0){
-				//				OledShowString(4,1,"none");
-				//			}else{								
-				//				OledShowChar(i,j,data);								
-				//			}
-				//		}else{
-				//			lock = 0;
-				//		}
-				//	}
-				//}
 				DelayUs(5);
 			}					
 		}
 	}
 };
 
-#include "W25Q64.h"
+
 //app5 is storage
 void Storage(void)
 {
 	OledClear();
 	uint8_t MID;
+	uint8_t flag_write = 0; //flag of write data to flash
 	uint16_t DID;
 	
 	
 	OledShowString(1, 1, "MID:   DID:");
-
 	
+	W25Q64SectorErase(0x00);
 	W25Q64ReadID(&MID, &DID);
 	OledShowHexNum(1, 5, MID, 2);
 	OledShowHexNum(1, 12, DID, 4);	
 
+	//将蓝牙接收到的数据转发到外部flash中
 	while(1){
 		if(StateRead(RETURN) == 1){
 			status = 1;
 			return;
 		}else{
-			uint8_t b;
-			for(uint8_t i =0;i<5;i++){
-				W25Q64ReadData((uint32_t)i, &b, 1);
-				OledShowChar(3, i, b);
+			if(flag_write == 0){
+				SpiChose(0);
+				W25Q64WriteEnable();
+				SpiSwapByte(W25Q64_PAGE_PROGRAM);
+				SpiSwapByte(0x00 >> 16);
+				SpiSwapByte(0x00 >> 8);
+				SpiSwapByte(0x00);
+				for(uint8_t i =0;i<JdyStack->size;i++){
+					if(JdyStack->phead == NULL)
+					{	
+						flag_write = 1;
+						i=16;
+						SpiChose(1);
+						break;
+					}
+					SpiSwapByte(QueuePop(JdyStack));
+				}
 			}
 		}
 	}
 };
 
 
+
+//蓝牙转串口发送来的各种信息
+#include "systick.h" //
+void dateDeal(void){
+	uint32_t data = 0;
+	data |= (QueuePop(JdyStack)<<24);
+	data |= (QueuePop(JdyStack)<<16);
+	data |= (QueuePop(JdyStack)<<8);
+	data |= (QueuePop(JdyStack));
+	ClockTime = data;
+	//更新全局时间
+	DateCalculate();
+	while(QueuePop(JdyStack) != 0xFE);
+};
+
+void weatherDeal(void)
+{
+	Weather = QueuePop(JdyStack);
+	while(QueuePop(JdyStack) != 0xFE);
+};
+
+void musicDeal(void)
+{
+	uint8_t data = 0;
+	//数据量比较大的存储在W25Q64中
+	while(data == ENDSIGN){
+		data = ReadBufOne();
+		//TODO();将文本存放在flash中
+	}
+}; 

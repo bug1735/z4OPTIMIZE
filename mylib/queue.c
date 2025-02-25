@@ -42,3 +42,26 @@ QUEUE_DATA QueuePop(struct QueueStack * stack)
         return 0;
     }
 } 
+
+//**************************************************
+//使用数组作为buffer
+uint8_t * buffer;
+uint8_t WriteIndex = 0; //当前buffer写入的位置
+uint8_t ReadIndex = 0; //当前buffer读取的位置
+//write to buffer
+void WriteBuf(uint8_t *data,uint8_t count){
+	for(uint16_t i = 0;i<=count;i++){
+		buffer[WriteIndex++]= data[i];
+	}	
+}
+
+//read buffer
+void ReadBuf(uint8_t *data,uint8_t count){
+	for(uint16_t i= 0;i <= count;i++){
+		data[i] = buffer[ReadIndex++];
+	}
+}
+
+uint8_t ReadBufOne(){
+	return buffer[ReadIndex++];
+};

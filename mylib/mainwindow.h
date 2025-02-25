@@ -11,10 +11,15 @@
 
 extern uint8_t status;
 extern uint8_t state;  //the state of input
-//extern uint8_t ensure;
-//extern uint8_t working;
+
 extern uint32_t SysTime;
 extern int32_t ClockTime;
+extern int16_t DateYear;
+extern int8_t DateDay;
+extern int8_t DateMonth;
+extern int8_t DateWeek;
+extern int8_t Weather;
+
 #define CLOCKRUN 	0
 #define APPCHOOSE	1
 #define TIMERRUN	2

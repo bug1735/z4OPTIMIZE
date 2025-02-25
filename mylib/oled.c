@@ -8,7 +8,7 @@
 
 void IicSendByte(uint8_t data){
 	
-	for(int i = 0; i < 8; i++){
+ 	for(int i = 0; i < 8; i++){
 		if( (data&(0x80 >> i)) == (0x80 >> i) )
 		{
 			IICSEND1;

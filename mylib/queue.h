@@ -24,4 +24,21 @@ void CreatQueue(struct QueueStack ** stack);
 void QueuePush(struct QueueStack * stack,QUEUE_DATA);
 //pop
 QUEUE_DATA QueuePop(struct QueueStack * stack);
+
+
+//**************************************************
+//使用数组作为buffer
+extern uint8_t * buffer;
+#define BUFSIZE  256
+
+#define BUFFERINIT()	buffer = (uint8_t *)malloc(BUFSIZE);
+extern uint8_t WriteIndex; //当前buffer写入的位置
+extern uint8_t ReadIndex; //当前buffer读取的位置
+
+//write to buffer
+void WriteBuf(uint8_t *data,uint8_t count);
+
+//read buffer
+void ReadBuf(uint8_t *data,uint8_t count);
+uint8_t ReadBufOne();
 #endif

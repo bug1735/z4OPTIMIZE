@@ -44,6 +44,8 @@
 
 //usart hardware init
 void UsartInit(void);
+//usart and DMA hardware init
+void UsartInit_DMA(void);
 
 //jdy-31 init
 void JdyInit(void);
