@@ -367,42 +367,10 @@ void StepNum(void){
 			//OledShowNum(2,1,roll,4);
 			//OledShowNum(3,1,roll,4);
 			
-			MPUGetData(&BX, &BY, &BZ, &GX, &GY, &GZ);
-			//OledShowSignedNum(2, 1, AX, 5);
-			//OledShowSignedNum(3, 1, AY, 5);
-			//OledShowSignedNum(4, 1, AZ, 5);
+			MPU6050_GetData(&BX, &BY, &BZ, &GX, &GY, &GZ);
 			OledShowSignedNum(2, 8, BX, 5);
 			OledShowSignedNum(3, 8, BY, 5);
-			OledShowSignedNum(4, 8, BZ, 5);
-			
-			//MPUReadReg(MPU6050_ACCEL_XOUT_H);
-			//MPUReadReg(MPU6050_ACCEL_XOUT_L);
-			//BX = (DataH << 8) | DataL;
-			//
-			//MPUReadReg(MPU6050_ACCEL_YOUT_H);
-			//MPUReadReg(MPU6050_ACCEL_YOUT_L);
-			//BY = (DataH << 8) | DataL;
-			//
-			//MPUReadReg(MPU6050_ACCEL_ZOUT_H);
-			//MPUReadReg(MPU6050_ACCEL_ZOUT_L);
-			//BZ = (DataH << 8) | DataL;
-			
-			//MPUReadBytes(0x68,MPU6050_ACCEL_XOUT_H,1,&DataH);
-			//MPUReadBytes(0x68,MPU6050_ACCEL_XOUT_L,1,&DataL);
-			//AX = (DataH << 8) | DataL;
-			//
-			//MPUReadBytes(0x68,MPU6050_ACCEL_YOUT_H,1,&DataH);
-			//MPUReadBytes(0x68,MPU6050_ACCEL_YOUT_L,1,&DataL);
-			//AY = (DataH << 8) | DataL;
-			//
-			//MPUReadBytes(0x68,MPU6050_ACCEL_ZOUT_H,1,&DataH);
-			//MPUReadBytes(0x68,MPU6050_ACCEL_ZOUT_L,1,&DataL);
-			//AZ = (DataH << 8) | DataL;
-			//mpu_get_gyro_reg(data,&timestamp);
-			//OledShowSignedNum(2, 1, data[0], 5);
-			//OledShowSignedNum(3, 1, data[1], 5);
-			//OledShowSignedNum(4, 1, data[2], 5);
-	
+			OledShowSignedNum(4, 8, BZ, 5);		
 		}
 	}
 };
