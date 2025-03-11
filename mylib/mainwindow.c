@@ -366,7 +366,7 @@ void StepNum(void){
 			//OledShowNum(1,1,pitch,4);
 			//OledShowNum(2,1,roll,4);
 			//OledShowNum(3,1,roll,4);
-			
+			OledShowNum(1,1,stepnum,5);
 			MPU6050_GetData(&BX, &BY, &BZ, &GX, &GY, &GZ);
 			OledShowSignedNum(2, 8, BX, 5);
 			OledShowSignedNum(3, 8, BY, 5);

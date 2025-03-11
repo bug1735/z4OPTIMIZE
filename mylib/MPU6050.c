@@ -49,11 +49,11 @@ void MPU6050_Init(void){
 
 void MPUInit(void){
 	MyI2C_Init();
-	
+	MPUInteruput_Init();
 	MPU6050_WriteReg(MPU6050_PWR_MGMT_1,0x00);
 	MPU6050_WriteReg(MPU6050_ACCEL_CONFIG,0x00);
-	MPU6050_WriteReg(MPU6050_RA_MOT_THR,0x04);
-	MPU6050_WriteReg(MPU6050_RA_MOT_DUR,0x20);
+	MPU6050_WriteReg(MPU6050_RA_MOT_THR,0x01);  //motion detection threshold 
+	MPU6050_WriteReg(MPU6050_RA_MOT_DUR,0x10); //the duration of exceeding the motion detection threshold 
 	MPU6050_WriteReg(0x69,0x00);
 	MPU6050_WriteReg(MPU6050_RA_INT_ENABLE,0x40);
 };
@@ -92,3 +92,28 @@ void MPU6050_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 	*GyroZ = (DataH << 8) | DataL;						//数据拼接，通过输出参数返回
 }
 
+void MPUInteruput_Init(void){
+	GPIO_InitTypeDef GPIO_InitStruct;
+    EXTI_InitTypeDef EXTI_InitStruct;
+    NVIC_InitTypeDef NVIC_InitStruct;
+    // 1. Enable GPIOA and AFIO clocks
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+    // 2. Configure PA8
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU;  // Input pull-up
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &GPIO_InitStruct);
+    // 3. Configure EXTI line for PA8
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource8);  // Map PA8 to EXTI8
+    EXTI_InitStruct.EXTI_Line = EXTI_Line8;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;  // Choose trigger
+    EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStruct);
+    // 4. Configure NVIC
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;  // PA8 uses EXTI9_5_IRQHandler
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x02;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+};

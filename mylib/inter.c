@@ -1,5 +1,6 @@
 #include "inter.h"
 
+uint16_t stepnum = 0;
 
 /*
 **@param bit is the state bit
@@ -105,4 +106,22 @@ void EXTI4_IRQHandler(void){
     //    EXTI_ClearITPendingBit(EXTI_Line4); // 清除中断标志位
 	//	DELAY;
 	//}
+}
+
+#include "MPU6050.h"
+void EXTI9_5_IRQHandler(void){
+	if(EXTI_GetITStatus(EXTI_Line8) != RESET)
+    {
+		// 检查MPU6050中断来源
+		uint8_t int_status = MPU6050_ReadReg(0x3A);
+		if (int_status & 0x40) { // 运动检测中断标志位
+			stepnum++;	
+		}
+		// 清除MPU6050中断标志
+		MPU6050_ReadReg(0x3A); // 读取INT_STATUS会自动清除中断
+		// 清除EXTI中断标志
+	
+
+        EXTI_ClearITPendingBit(EXTI_Line8);
+    }
 }

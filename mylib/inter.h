@@ -3,10 +3,16 @@
 
 #include "oled.h"
 
+/* interuput priority grouping in keyborad.h 
+**	the priority had been locked in group mode 2 bits for Preemption priority ,
+**	2bits for subPriority
+*/
+
 extern uint8_t status;
 extern uint8_t state;
 extern uint32_t SysTime;
 extern uint32_t SysTime2;
+extern uint16_t stepnum;
 #define ENSURE	0   
 #define RETURN 	1
 #define RIGHT	2
@@ -33,6 +39,9 @@ void EXTI2_IRQHandler(void);
 
 //down
 void EXTI4_IRQHandler(void);
+
+//interuput for MPU6050 motion detection
+void EXTI9_5_IRQHandler(void);
 
 
 #endif 

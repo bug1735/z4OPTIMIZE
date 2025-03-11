@@ -495,6 +495,16 @@
               <FileType>5</FileType>
               <FilePath>.\mylib\queue.h</FilePath>
             </File>
+            <File>
+              <FileName>MyI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\mylib\MyI2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>MyI2C.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\mylib\MyI2C.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -614,41 +624,6 @@
               <FileName>stm32f10x_wwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Library\stm32f10x_wwdg.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>MPU</GroupName>
-          <Files>
-            <File>
-              <FileName>dmpKey.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MPU\dmpKey.h</FilePath>
-            </File>
-            <File>
-              <FileName>dmpmap.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MPU\dmpmap.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\MPU\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MPU\inv_mpu.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\MPU\inv_mpu_dmp_motion_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MPU\inv_mpu_dmp_motion_driver.h</FilePath>
             </File>
           </Files>
         </Group>

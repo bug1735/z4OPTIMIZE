@@ -77,17 +77,17 @@ int main(void)
 	
 	BUFFERINIT();
 	
-	uint32_t phyaddr = 0x800000;
-	uint32_t viraddr = W_ADDR_RET(phyaddr);
-	OledShowHexNum(2,1,phyaddr,10);
-	OledShowHexNum(3,1,viraddr,10);
-	char * data = "name is myworte is ok";
-	W25Q64SectorErase(phyaddr);
-	MyWrite(viraddr,(uint8_t*)data,21);
-	uint8_t * data2 = MyRead(viraddr,21);
-	OledShowString(1,1,(char*)data2);
+	//uint32_t phyaddr = 0x800000;
+	//uint32_t viraddr = W_ADDR_RET(phyaddr);
+	//OledShowHexNum(2,1,phyaddr,10);
+	//OledShowHexNum(3,1,viraddr,10);
+	//char * data = "name is myworte is ok";
+	//W25Q64SectorErase(phyaddr);
+	//MyWrite(viraddr,(uint8_t*)data,21);
+	//uint8_t * data2 = MyRead(viraddr,21);
+	//OledShowString(1,1,(char*)data2);
 	while(1){	
-		//AppShow();
+		AppShow();
 	};
 	
 }
