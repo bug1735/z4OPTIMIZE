@@ -11,7 +11,6 @@
 #include "keyborad.h"
 #include "mainwindow.h"
 #include "inter.h"
-#include "inv_mpu.h"
 #include "mpu6050.h"
 #include "usart.h"
 #include "W25Q64.h"

@@ -40,5 +40,5 @@ void WriteBuf(uint8_t *data,uint8_t count);
 
 //read buffer
 void ReadBuf(uint8_t *data,uint8_t count);
-uint8_t ReadBufOne();
+uint8_t ReadBufOne(void);
 #endif

@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "inter.h"
 #include "MPU6050.h"
-#include "inv_mpu.h"
 /*
 **	status=0 CLOCK
 	status=1 APPCHOSE
@@ -17,7 +16,7 @@
 						OledShowNUM(NUM2,NUM/60%10);	\
 						OledShowNUM(NUM1,NUM/60/10);	
 
-char appstr[5][16] = {"timer","counttimer","stepnum","music","sorage"};
+char appstr[5][16] = {"    timer   ","  counttimer  ","   stepnum   ","    music    ","   sorage   "};
 
 #include "W25Q64.h"
 #include "queue.h"
@@ -141,7 +140,6 @@ void AppChoose(void){
 	OledClear();
 	status = 2;
 	while(status != 0){
-		OledShowNum(4,6,status,2);
 		if(StateRead(RIGHT) == 1){
 			status ++;
 			if(status == APPEND+1){
@@ -351,26 +349,19 @@ void CountdownTimer(void){
 //app3 is 显示步数status = 3 ,ensure = 1 
 void StepNum(void){
 	OledClear();
-	//float pitch,yaw,roll;
-	//int16_t AX, AY, AZ;
 	int16_t BX,BY,BZ, GX, GY, GZ;
-	//short data[3];
-	//unsigned long timestamp;
-	//uint8_t DataH, DataL;
+	OledShowString(1,1,"step:");
 	while(status == STEPRUN){
 		if(StateRead(RETURN) == 1){
 			status = 1;
 			return;
-		}else{
-			//MPU6050_DMP_Get_Data(&pitch,&roll,&yaw);
-			//OledShowNum(1,1,pitch,4);
-			//OledShowNum(2,1,roll,4);
-			//OledShowNum(3,1,roll,4);
-			OledShowNum(1,1,stepnum,5);
-			MPU6050_GetData(&BX, &BY, &BZ, &GX, &GY, &GZ);
-			OledShowSignedNum(2, 8, BX, 5);
-			OledShowSignedNum(3, 8, BY, 5);
-			OledShowSignedNum(4, 8, BZ, 5);		
+		}else{	
+			
+			OledShowNum(1,6,stepnum,5);				
+			//MPU6050_GetData(&BX, &BY, &BZ, &GX, &GY, &GZ);
+			//OledShowSignedNum(2, 8, BX, 5);
+			//OledShowSignedNum(3, 8, BY, 5);
+			//OledShowSignedNum(4, 8, BZ, 5);		
 		}
 	}
 };
